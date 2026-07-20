@@ -38,7 +38,7 @@ variable "vpc_id" {
  description = <<EOT
 ID of the VPC to associate with a PRIVATE_DNS namespace. FORCE-NEW — required
 when namespace_type = PRIVATE_DNS, and must be omitted for PUBLIC_DNS/HTTP
-namespaces (they are not VPC-scoped). Wire from tf-mod-aws-vpc (the VPC must
+namespaces (they are not VPC-scoped). Wire from terraform-aws-vpc (the VPC must
 have DNS support and DNS hostnames enabled).
 EOT
  type = string
@@ -66,7 +66,7 @@ variable "description" {
 #
 # Each entry is one aws_service_discovery_service. Keyed by a stable caller
 # string used as the service's DNS name unless `name` overrides it, mirroring
-# the tf-mod-aws-route53-zone `records` pattern. All services in this module
+# the terraform-aws-route53-zone `records` pattern. All services in this module
 # call register against the single namespace created above.
 ###############################################################################
 

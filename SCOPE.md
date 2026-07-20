@@ -1,4 +1,4 @@
-# tf-mod-aws-service-discovery — SCOPE
+# terraform-aws-service-discovery — SCOPE
 
 Composite module for **AWS Cloud Map** (the service formerly/still branded
 "Service Discovery" in its Terraform resource names). A single module call
@@ -34,7 +34,7 @@ Amazon ECS service discovery / ECS Service Connect.
 ## Consumes
 | Input | Type | Source module |
 |---|---|---|
-| `vpc_id` | `string` (`vpc-xxxxxxxx`) | `tf-mod-aws-vpc` (required only when `namespace_type = PRIVATE_DNS`) |
+| `vpc_id` | `string` (`vpc-xxxxxxxx`) | `terraform-aws-vpc` (required only when `namespace_type = PRIVATE_DNS`) |
 | `services[*].health_check_config` health target | n/a (probed by Route 53, not Terraform-managed) | — |
 
 > This module sits mid-stack: it consumes only a VPC id (for private namespaces) and is itself consumed
@@ -53,7 +53,7 @@ Amazon ECS service discovery / ECS Service Connect.
 | `ec2:DescribeVpcs`, `ec2:DescribeRegions` | PRIVATE_DNS namespace creation validates the supplied VPC |
 
 No `iam:PassRole` is required — this module registers no execution role. Callers wiring an ECS task
-into `service_registries` handle that role in `tf-mod-aws-ecs-service`, not here.
+into `service_registries` handle that role in `terraform-aws-ecs-service`, not here.
 
 ## AWS Prerequisites
 - **No mandatory service-linked role for Cloud Map itself.** (ECS Service Connect, which commonly
@@ -66,7 +66,7 @@ into `service_registries` handle that role in `tf-mod-aws-ecs-service`, not here
 - **The VPC must have `enable_dns_support` and `enable_dns_hostnames` set to `true`** before a
   PRIVATE_DNS namespace will resolve correctly inside it.
 - **ECS Service Connect** uses an HTTP namespace (`namespace_type = "HTTP"`) as its shared namespace —
-  this module is the correct source for that namespace when wiring `tf-mod-aws-ecs-service`.
+  this module is the correct source for that namespace when wiring `terraform-aws-ecs-service`.
 - **Quotas:** default Cloud Map quotas include 100 namespaces per account/Region, 6,000 services per
   account/Region, and 400,000 registered instances per account/Region (all soft, raisable via Service
   Quotas). Namespace count is rarely a constraint at Casey's scale; large ECS estates can approach the
@@ -82,7 +82,7 @@ into `service_registries` handle that role in `tf-mod-aws-ecs-service`, not here
 | `hosted_zone_id` | Auto-created Route 53 zone id (null for HTTP) | Any module needing to look up records in the hidden zone (read-only) |
 | `http_name` | HTTP namespace's reported name (null unless HTTP) | Debug/verification |
 | `service_ids` | Map of `services` key -> service id | `aws_ecs_service.service_registries.registry_arn` callers typically want `service_arns` instead |
-| `service_arns` | Map of `services` key -> service ARN | `tf-mod-aws-ecs-service` `service_registries` block |
+| `service_arns` | Map of `services` key -> service ARN | `terraform-aws-ecs-service` `service_registries` block |
 | `service_names` | Map of `services` key -> rendered service name | Documentation / cross-checking DNS names |
 | `instance_ids` | Map of `instances` key -> instance id | Debug/verification |
 | `tags_all` | All tags on the active namespace incl. provider `default_tags` | Governance/audit |

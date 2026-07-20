@@ -49,12 +49,12 @@ Whether it's a star, a professional connection, or a coffee, every gesture helps
 
 ```mermaid
 flowchart LR
- VPC["tf-mod-aws-vpc"] -->|vpc_id| SD["tf-mod-aws-service-discovery"]
- IAM["tf-mod-aws-iam-role"] -.->|task/exec roles, not wired here| ECS
- SD -->|service_arns / registry ARN| ECS["tf-mod-aws-ecs-service"]
- SD -->|hosted_zone_id read-only| R53["tf-mod-aws-route53-zone"]
- EKS["tf-mod-aws-eks-node-group"] -.->|instances optionally registered| SD
- LB["tf-mod-aws-lb"] -.->|health-checked endpoint| SD
+ VPC["terraform-aws-vpc"] -->|vpc_id| SD["terraform-aws-service-discovery"]
+ IAM["terraform-aws-iam-role"] -.->|task/exec roles, not wired here| ECS
+ SD -->|service_arns / registry ARN| ECS["terraform-aws-ecs-service"]
+ SD -->|hosted_zone_id read-only| R53["terraform-aws-route53-zone"]
+ EKS["terraform-aws-eks-node-group"] -.->|instances optionally registered| SD
+ LB["terraform-aws-lb"] -.->|health-checked endpoint| SD
 
  style SD fill:#FF9900,color:#fff
 ```
@@ -132,7 +132,7 @@ No service-linked role is auto-created by Cloud Map itself, and no `iam:PassRole
 ## 📁 Module Structure
 
 ```
-tf-mod-aws-service-discovery/
+terraform-aws-service-discovery/
 ├── providers.tf
 ├── variables.tf
 ├── main.tf
@@ -147,12 +147,12 @@ tf-mod-aws-service-discovery/
 
 ```hcl
 module "vpc" {
-  source = "git::https://github.com/microsoftexpert/tf-mod-aws-vpc?ref=v1.0.0"
+  source = "git::https://github.com/microsoftexpert/terraform-aws-vpc?ref=v1.0.0"
   #...
 }
 
 module "service_discovery" {
-  source = "git::https://github.com/microsoftexpert/tf-mod-aws-service-discovery?ref=v1.0.0"
+  source = "git::https://github.com/microsoftexpert/terraform-aws-service-discovery?ref=v1.0.0"
 
   namespace_name = "internal.local"
   namespace_type = "PRIVATE_DNS"
@@ -180,7 +180,7 @@ module "service_discovery" {
 ### Consumes
 | Input | Type | Source module |
 |---|---|---|
-| `vpc_id` | `string` (`vpc-xxxxxxxx`) | `tf-mod-aws-vpc` (required only when `namespace_type = PRIVATE_DNS`) |
+| `vpc_id` | `string` (`vpc-xxxxxxxx`) | `terraform-aws-vpc` (required only when `namespace_type = PRIVATE_DNS`) |
 
 ### Emits
 | Output | Description | Consumed by |
@@ -192,7 +192,7 @@ module "service_discovery" {
 | `hosted_zone_id` | Auto-created Route 53 zone id (null for HTTP) | Read-only lookups against the hidden zone |
 | `http_name` | HTTP namespace's reported name (null unless HTTP) | Debug/verification |
 | `service_ids` | Map: services key -> service id | Debug/verification |
-| `service_arns` | Map: services key -> service ARN | `tf-mod-aws-ecs-service` `service_registries` block |
+| `service_arns` | Map: services key -> service ARN | `terraform-aws-ecs-service` `service_registries` block |
 | `service_names` | Map: services key -> rendered service name | Documentation |
 | `instance_ids` | Map: instances key -> instance id | Debug/verification |
 | `tags_all` | All tags incl. provider `default_tags` | Governance/audit |
@@ -205,7 +205,7 @@ module "service_discovery" {
 
 ```hcl
 module "service_discovery" {
-  source = "git::https://github.com/microsoftexpert/tf-mod-aws-service-discovery?ref=v1.0.0"
+  source = "git::https://github.com/microsoftexpert/terraform-aws-service-discovery?ref=v1.0.0"
 
   namespace_name = "internal.local"
   namespace_type = "PRIVATE_DNS"
@@ -218,7 +218,7 @@ module "service_discovery" {
 
 ```hcl
 module "service_discovery" {
-  source = "git::https://github.com/microsoftexpert/tf-mod-aws-service-discovery?ref=v1.0.0"
+  source = "git::https://github.com/microsoftexpert/terraform-aws-service-discovery?ref=v1.0.0"
 
   namespace_name = "internal.local"
   namespace_type = "PRIVATE_DNS"
@@ -239,7 +239,7 @@ module "service_discovery" {
 
 ```hcl
 module "service_discovery" {
-  source = "git::https://github.com/microsoftexpert/tf-mod-aws-service-discovery?ref=v1.0.0"
+  source = "git::https://github.com/microsoftexpert/terraform-aws-service-discovery?ref=v1.0.0"
 
   namespace_name = "svc.example.com"
   namespace_type = "PUBLIC_DNS"
@@ -266,7 +266,7 @@ module "service_discovery" {
 
 ```hcl
 module "service_discovery" {
-  source = "git::https://github.com/microsoftexpert/tf-mod-aws-service-discovery?ref=v1.0.0"
+  source = "git::https://github.com/microsoftexpert/terraform-aws-service-discovery?ref=v1.0.0"
 
   namespace_name = "my-cluster"
   namespace_type = "HTTP"
@@ -284,7 +284,7 @@ module "service_discovery" {
 
 ```hcl
 module "service_discovery" {
-  source = "git::https://github.com/microsoftexpert/tf-mod-aws-service-discovery?ref=v1.0.0"
+  source = "git::https://github.com/microsoftexpert/terraform-aws-service-discovery?ref=v1.0.0"
 
   namespace_name = "internal.local"
   namespace_type = "PRIVATE_DNS"
@@ -313,7 +313,7 @@ module "service_discovery" {
 
 ```hcl
 module "service_discovery" {
-  source = "git::https://github.com/microsoftexpert/tf-mod-aws-service-discovery?ref=v1.0.0"
+  source = "git::https://github.com/microsoftexpert/terraform-aws-service-discovery?ref=v1.0.0"
 
   namespace_name = "internal.local"
   namespace_type = "PRIVATE_DNS"
@@ -335,7 +335,7 @@ module "service_discovery" {
 
 ```hcl
 module "service_discovery" {
-  source = "git::https://github.com/microsoftexpert/tf-mod-aws-service-discovery?ref=v1.0.0"
+  source = "git::https://github.com/microsoftexpert/terraform-aws-service-discovery?ref=v1.0.0"
 
   namespace_name = "internal.local"
   namespace_type = "PRIVATE_DNS"
@@ -372,7 +372,7 @@ locals {
 }
 
 module "service_discovery" {
-  source   = "git::https://github.com/microsoftexpert/tf-mod-aws-service-discovery?ref=v1.0.0"
+  source   = "git::https://github.com/microsoftexpert/terraform-aws-service-discovery?ref=v1.0.0"
   for_each = local.environments
 
   namespace_name = "internal.${each.key}.local"
@@ -393,7 +393,7 @@ module "service_discovery" {
 # }
 
 module "service_discovery" {
-  source = "git::https://github.com/microsoftexpert/tf-mod-aws-service-discovery?ref=v1.0.0"
+  source = "git::https://github.com/microsoftexpert/terraform-aws-service-discovery?ref=v1.0.0"
 
   namespace_name = "internal.local"
   namespace_type = "PRIVATE_DNS"
@@ -417,7 +417,7 @@ output "tags_all" {
 
 ```hcl
 module "service_discovery" {
-  source = "git::https://github.com/microsoftexpert/tf-mod-aws-service-discovery?ref=v1.0.0"
+  source = "git::https://github.com/microsoftexpert/terraform-aws-service-discovery?ref=v1.0.0"
 
   namespace_name = "internal.local"
   namespace_type = "PRIVATE_DNS"
@@ -449,12 +449,12 @@ import {
 
 ```hcl
 module "vpc" {
-  source = "git::https://github.com/microsoftexpert/tf-mod-aws-vpc?ref=v1.0.0"
+  source = "git::https://github.com/microsoftexpert/terraform-aws-vpc?ref=v1.0.0"
   #...
 }
 
 module "service_discovery" {
-  source = "git::https://github.com/microsoftexpert/tf-mod-aws-service-discovery?ref=v1.0.0"
+  source = "git::https://github.com/microsoftexpert/terraform-aws-service-discovery?ref=v1.0.0"
 
   namespace_name = "internal.local"
   namespace_type = "PRIVATE_DNS"
@@ -471,7 +471,7 @@ module "service_discovery" {
 }
 
 module "ecs_service" {
-  source = "git::https://github.com/microsoftexpert/tf-mod-aws-ecs-service?ref=v1.0.0"
+  source = "git::https://github.com/microsoftexpert/terraform-aws-ecs-service?ref=v1.0.0"
 
   #...
   service_registries = {
@@ -567,7 +567,7 @@ No output in this module is `sensitive = true` — Cloud Map resources carry no 
 ## 🚀 Runbook
 
 ```powershell
-cd C:\GitHubCode\newawsmodules\tf-mod-aws-service-discovery
+cd C:\GitHubCode\newawsmodules\terraform-aws-service-discovery
 terraform init -backend=false
 terraform validate
 terraform fmt -check
